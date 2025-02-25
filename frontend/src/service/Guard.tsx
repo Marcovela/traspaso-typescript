@@ -1,6 +1,6 @@
 import React, { ComponentType } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import ApiService from "./ApiService";
+import ApiService from "./ApiService.ts";
 
 interface RouteProps {
     element: ComponentType;
