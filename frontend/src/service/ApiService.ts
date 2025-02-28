@@ -1,11 +1,40 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+
+interface Registration {
+    username: string;
+    password: string;
+    email: string;
+}
+
+interface LoginDetails {
+    username: string;
+    password: string;
+}
+
+interface Product {
+    id: string;
+    name: string;
+    price: number;
+    // otros campos relevantes
+}
+
+interface Category {
+    id: string;
+    name: string;
+    // otros campos relevantes
+}
+
+interface Order {
+    id: string;
+    status: string;
+    
+}
 
 export default class ApiService {
 
-
     static BASE_URL = "http://localhost:2424";
 
-    static getHeader() {
+    static getHeader(): { Authorization: string; "Content-Type": string } {
         const token = localStorage.getItem("token");
         return {
             Authorization: `Bearer ${token}`,
@@ -14,14 +43,13 @@ export default class ApiService {
     }
 
     /**AUTh && USERS API */
-    static async registerUser(registration) {
-        const response = await axios.post(`${this.BASE_URL}/auth/register`, registration)
+    static async registerUser(registration: Registration): Promise<any> {
+        const response: AxiosResponse = await axios.post(`${this.BASE_URL}/auth/register`, registration);
         return response.data;
     }
 
-
-    static async loginUser(loginDetails) {
-        const response = await axios.post(`${this.BASE_URL}/auth/login`, loginDetails)
+    static async loginUser(loginDetails: LoginDetails): Promise<any> {
+        const response: AxiosResponse = await axios.post(`${this.BASE_URL}/auth/login`, loginDetails);
         return response.data;
     }
 
