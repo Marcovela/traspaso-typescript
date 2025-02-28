@@ -1,9 +1,18 @@
 import axios from "axios";
-
+interface Registration {
+    username: string;
+    email: string;
+    password: string;
+}
+interface LoginDetails {
+    email: string;
+    password: string;
+}
 export default class ApiService {
+    
 
     static BASE_URL = "http://localhost:2424";
-
+    
     static getHeader() {
         const token = localStorage.getItem("token");
         return {
@@ -13,13 +22,13 @@ export default class ApiService {
     }
 
     /**AUTh && USERS API */
-    static async registerUser(registration) {
+    static async registerUser(registration: Registration) {
         const response = await axios.post(`${this.BASE_URL}/auth/register`, registration)
         return response.data;
     }
 
 
-    static async loginUser(loginDetails) {
+    static async loginUser(loginDetails: LoginDetails) {
         const response = await axios.post(`${this.BASE_URL}/auth/login`, loginDetails)
         return response.data;
     }
