@@ -2,74 +2,85 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../service/ApiService";
 import { useCart } from "../context/CartContext";
-import '../../style/cart.css'
+import '../../style/cart.css';
 
-const CartPage = () => {
-    const { cart, dispatch } = useCart();
-    const [message, setMessage] = useState(null);
+interface CartItem {
+    name: string;
+    description: string;
+    price: number;
+    imageUrl: string;
+}
+
+interface OrderItem {
+    productId: string;
+    quantity: number;
+}
+
+interface OrderRequest {
+    totalPrice: number;
+    items: OrderItem[];
+}
+
+const CartPage: React.FC = () => {
+    const { cart, dispatch } = useCart
+        ();
+    const [message, setMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
-
-    const incrementItem = (product) => {
+    const incrementItem = (product: CartItem) => {
         dispatch({ type: 'INCREMENT_ITEM', payload: product });
-    }
+    };
 
-    const decrementItem = (product) => {
-
-        const cartItem = cart.find(item => item.id === product.id);
+    const decrementItem = (product: CartItem) => {
+        const cartItem = cart.find((item: CartItem) => item.id === product.id);
         if (cartItem && cartItem.quantity > 1) {
             dispatch({ type: 'DECREMENT_ITEM', payload: product });
         } else {
             dispatch({ type: 'REMOVE_ITEM', payload: product });
         }
-    }
+    };
 
-    const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-
-
+    const totalPrice = cart.reduce((total: number, item: CartItem) => total + item.price * item.quantity, 0);
 
     const handleCheckout = async () => {
         if (!ApiService.isAuthenticated()) {
             setMessage("You need to login first before you can place an order");
             setTimeout(() => {
-                setMessage('')
-                navigate("/login")
+                setMessage(null);
+                navigate("/login");
             }, 3000);
             return;
         }
 
-        const orderItems = cart.map(item => ({
+        const orderItems: OrderItem[] = cart.map((item: CartItem) => ({
             productId: item.id,
             quantity: item.quantity
         }));
 
-        const orderRequest = {
+        const orderRequest: OrderRequest = {
             totalPrice,
             items: orderItems,
-        }
+        };
 
         try {
             const response = await ApiService.createOrder(orderRequest);
-            setMessage(response.message)
+            setMessage(response.message);
 
             setTimeout(() => {
-                setMessage('')
+                setMessage(null);
             }, 5000);
 
             if (response.status === 200) {
-                dispatch({ type: 'CLEAR_CART' })
+                dispatch({ type: 'CLEAR_CART' });
             }
 
-        } catch (error) {
+        } catch (error: any) {
             setMessage(error.response?.data?.message || error.message || 'Failed to place an order');
             setTimeout(() => {
-                setMessage('')
+                setMessage(null);
             }, 3000);
-
         }
-
     };
-
 
     return (
         <div className="cart-page">
@@ -81,18 +92,18 @@ const CartPage = () => {
             ) : (
                 <div>
                     <ul>
-                        {cart.map(item => (
+                        {cart.map((item: CartItem) => (
                             <li key={item.id}>
                                 <img src={item.imageUrl} alt={item.name} />
                                 <div>
                                     <h2>{item.name}</h2>
                                     <p>{item.description}</p>
                                     <div className="quantity-controls">
-                                        <button onClick={()=> decrementItem(item)}>-</button>
+                                        <button onClick={() => decrementItem(item)}>-</button>
                                         <span>{item.quantity}</span>
-                                        <button onClick={()=> incrementItem(item)}>+</button>
+                                        <button onClick={() => incrementItem(item)}>+</button>
                                     </div>
-                                    <span>${item.price.toFixed()}</span>
+                                    <span>${item.price.toFixed(2)}</span>
                                 </div>
                             </li>
                         ))}
@@ -102,7 +113,7 @@ const CartPage = () => {
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default CartPage;
