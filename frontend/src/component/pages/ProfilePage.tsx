@@ -4,48 +4,67 @@ import ApiService from "../../service/ApiService";
 import '../../style/profile.css';
 import Pagination from "../common/Pagination";
 
-const ProfilePage = () => {
+interface Address {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+}
 
-    const [userInfo, setUserInfo] = useState(null);
-    const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+interface OrderItem {
+    id: string;
+    product: {
+        name: string;
+        imageUrl: string;
+    };
+    status: string;
+    quantity: number;
+    price: number;
+}
+
+interface UserInfo {
+    name: string;
+    email: string;
+    phoneNumber: string;
+    address?: Address;
+    orderItemList: OrderItem[];
+}
+
+const ProfilePage: React.FC = () => {
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const itemsPerPage = 5;
     const navigate = useNavigate();
 
-
     useEffect(() => {
-
         fetchUserInfo();
     }, []);
-    const fetchUserInfo = async () => {
 
+    const fetchUserInfo = async () => {
         try {
             const response = await ApiService.getLoggedInUserInfo();
             setUserInfo(response.user);
-        } catch (error) {
+        } catch (error: any) {
             setError(error.response?.data?.message || error.message || 'Unable to fetch user info');
         }
-    }
+    };
 
     if (!userInfo) {
-        return <div>Loading...</div>
+        return <div>Loading...</div>;
     }
 
     const handleAddressClick = () => {
         navigate(userInfo.address ? '/edit-address' : '/add-address');
-    }
+    };
 
     const orderItemList = userInfo.orderItemList || [];
-
     const totalPages = Math.ceil(orderItemList.length / itemsPerPage);
-
     const paginatedOrders = orderItemList.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-
-
-
 
     return (
         <div className="profile-page">
@@ -91,13 +110,14 @@ const ProfilePage = () => {
                         ))}
                     </ul>
                     <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={(page)=> setCurrentPage(page)}/>
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default ProfilePage;
