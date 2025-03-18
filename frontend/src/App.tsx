@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, AdminRoute } from './service/Guard';
 import Navbar from './component/common/Navbar';
 import Footer from './component/common/footer';
-import { CartProvider } from './component/context/CartContext';
+import { CartProvider } from './component/context/CartContext.txs';
 import Home from './component/pages/Home';
 import ProductDetailsPage from './component/pages/ProductDetailsPage';
 import CategoryListPage from './component/pages/CategoryListPage';

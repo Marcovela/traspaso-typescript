@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios"; // for making http requests
 
 interface Registration {
     username: string;
