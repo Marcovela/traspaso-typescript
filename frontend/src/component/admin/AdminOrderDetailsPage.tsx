@@ -2,33 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import '../../style/adminOrderDetails.css';
 import ApiService from "../../service/ApiService";
+import { OrderItem , OrderDetailsApiResponse } from '../../tipado';
 
-interface OrderItem {
-    id: string;
-    quantity: number;
-    price: number;
-    status: string;
-    createdAt: string;
-    user: {
-        name: string;
-        email: string;
-        phoneNumber: string;
-        role: string;
-        address?: {
-            country: string;
-            state: string;
-            city: string;
-            street: string;
-            zipcode: string;
-        };
-    };
-    product: {
-        name: string;
-        description: string;
-        price: number;
-        imageUrl: string;
-    };
-}
 
 const OrderStatus = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED", "RETURNED"];
 

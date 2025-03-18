@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-
+import { Category, CategoryApiResponse, OrderDetailsApiResponse } from '../tipado';
 interface Registration {
     username: string;
     password: string;
@@ -17,12 +17,19 @@ interface Product {
     price: number;
     // otros campos relevantes
 }
-
-interface Category {
-    id: string;
+// esto es lo que se espera de un producto, por lo que se debe cambiar el tipo de body en createCategory
+// por lo que se debe cambiar el tipo de body en createCategory
+// pero 
+// solo eliminaremos el id, ya que el id es generado por la base de datos
+// y no se debe enviar en el body
+// control + s para guardar 
+    // otros campos relevantes
+// cambiar si hay tiempo 
+interface Category1 {
     name: string;
     // otros campos relevantes
 }
+
 
 interface Order {
     id: string;
@@ -111,15 +118,15 @@ export default class ApiService {
     }
 
     /**CATEGORY */
-    static async createCategory(body: Category): Promise<any> {
+    static async createCategory(body: Category1): Promise<any> {
         const response: AxiosResponse = await axios.post(`${this.BASE_URL}/category/create`, body, {
             headers: this.getHeader()
         });
         return response.data;
     }
 
-    static async getAllCategory(): Promise<Category[]> {
-        const response: AxiosResponse<Category[]> = await axios.get(`${this.BASE_URL}/category/get-all`);
+    static async getAllCategory(): Promise<CategoryApiResponse> {
+        const response: AxiosResponse<CategoryApiResponse> = await axios.get(`${this.BASE_URL}/category/get-all`);
         return response.data;
     }
 
@@ -157,8 +164,8 @@ export default class ApiService {
         return response.data;
     }
 
-    static async getOrderItemById(itemId: string): Promise<Order> {
-        const response: AxiosResponse<Order> = await axios.get(`${this.BASE_URL}/order/filter`, {
+    static async getOrderItemById(itemId: string): Promise<OrderDetailsApiResponse> {
+        const response: AxiosResponse<OrderDetailsApiResponse> = await axios.get(`${this.BASE_URL}/order/filter`, {
             headers: this.getHeader(),
             params: { itemId }
         });

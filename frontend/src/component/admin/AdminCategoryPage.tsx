@@ -2,12 +2,8 @@ import React, { useState, useEffect } from "react";
 import ApiService from "../../service/ApiService";
 import { useNavigate } from "react-router-dom";
 import '../../style/adminCategory.css';
+import { Category } from '../../tipado';
 
-interface Category {
-    id: string;
-    name: string;
-    // otros campos relevantes
-}
 
 const AdminCategoryPage: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);

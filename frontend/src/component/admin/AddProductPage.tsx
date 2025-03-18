@@ -2,12 +2,7 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../style/addProduct.css';
 import ApiService from "../../service/ApiService";
-
-interface Category {
-    id: string;
-    name: string;
-    // otros campos relevantes
-}
+import { Category, CategoryApiResponse } from '../../tipado';
 
 const AddProductPage: React.FC = () => {
     const [image, setImage] = useState<File | null>(null);
@@ -17,11 +12,10 @@ const AddProductPage: React.FC = () => {
     const [description, setDescription] = useState<string>('');
     const [message, setMessage] = useState<string>('');
     const [price, setPrice] = useState<string>('');
-
     const navigate = useNavigate();
 
     useEffect(() => {
-        ApiService.getAllCategory().then((res) => setCategories(res));
+        ApiService.getAllCategory().then((res: CategoryApiResponse) => setCategories(res.categoryList));
     }, []);
 
     const handleImage = (e: ChangeEvent<HTMLInputElement>) => {

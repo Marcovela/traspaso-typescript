@@ -3,6 +3,7 @@ import ApiService from "../../service/ApiService";
 import { useNavigate } from "react-router-dom";
 import '../../style/addCategory.css';
 
+
 const AddCategory: React.FC = () => {
     const [name, setName] = useState<string>('');
     const [message, setMessage] = useState<string>('');
@@ -14,8 +15,10 @@ const AddCategory: React.FC = () => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
+        try {// listo
             const response = await ApiService.createCategory({ name });
+            //el tipo de name es string, por lo que no se puede pasar un objeto con name: name
+            //se debe pasar un objeto con name: name xd?
             if (response.status === 200) {
                 setMessage(response.message);
                 setTimeout(() => {
