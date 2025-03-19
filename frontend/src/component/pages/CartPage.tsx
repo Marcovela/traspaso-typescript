@@ -5,25 +5,16 @@ import { useCart } from "../context/CartContext";
 import '../../style/cart.css';
 
 interface CartItem {
+    id: string;
     name: string;
     description: string;
     price: number;
+    quantity: number;
     imageUrl: string;
 }
 
-interface OrderItem {
-    productId: string;
-    quantity: number;
-}
-
-interface OrderRequest {
-    totalPrice: number;
-    items: OrderItem[];
-}
-
 const CartPage: React.FC = () => {
-    const { cart, dispatch } = useCart
-        ();
+    const { cart, dispatch } = useCart();
     const [message, setMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -46,18 +37,18 @@ const CartPage: React.FC = () => {
         if (!ApiService.isAuthenticated()) {
             setMessage("You need to login first before you can place an order");
             setTimeout(() => {
-                setMessage(null);
+                setMessage('');
                 navigate("/login");
             }, 3000);
             return;
         }
 
-        const orderItems: OrderItem[] = cart.map((item: CartItem) => ({
+        const orderItems = cart.map((item: CartItem) => ({
             productId: item.id,
             quantity: item.quantity
         }));
 
-        const orderRequest: OrderRequest = {
+        const orderRequest = {
             totalPrice,
             items: orderItems,
         };
@@ -67,7 +58,7 @@ const CartPage: React.FC = () => {
             setMessage(response.message);
 
             setTimeout(() => {
-                setMessage(null);
+                setMessage('');
             }, 5000);
 
             if (response.status === 200) {
@@ -77,7 +68,7 @@ const CartPage: React.FC = () => {
         } catch (error: any) {
             setMessage(error.response?.data?.message || error.message || 'Failed to place an order');
             setTimeout(() => {
-                setMessage(null);
+                setMessage('');
             }, 3000);
         }
     };

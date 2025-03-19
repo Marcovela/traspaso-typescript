@@ -1,41 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import ApiService from "../../service/ApiService";
-import '../../style/register.css'
+import '../../style/register.css';
 
+interface FormData {
+    email: string;
+    name: string;
+    phoneNumber: string;
+    password: string;
+}
 
-const RegisterPage = () => {
-
-    const [formData, setFormData] = useState({
+const RegisterPage: React.FC = () => {
+    const [formData, setFormData] = useState<FormData>({
         email: '',
         name: '',
         phoneNumber: '',
         password: ''
     });
 
-    const [message, setMessage] = useState(null);
+    const [message, setMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
-
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    }
+    };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             const response = await ApiService.registerUser(formData);
             if (response.status === 200) {
-                setMessage("User Successfully Registerd");
+                setMessage("User Successfully Registered");
                 setTimeout(() => {
-                    navigate("/login")
-                }, 4000)
+                    navigate("/login");
+                }, 4000);
             }
-        } catch (error) {
-            setMessage(error.response?.data.message || error.message || "unable to register a user");
+        } catch (error: any) {
+            setMessage(error.response?.data.message || error.message || "Unable to register a user");
         }
-    }
+    };
 
     return (
         <div className="register-page">
@@ -48,7 +52,8 @@ const RegisterPage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required />
+                    required
+                />
 
                 <label>Name: </label>
                 <input
@@ -56,8 +61,8 @@ const RegisterPage = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required />
-
+                    required
+                />
 
                 <label>Phone Number: </label>
                 <input
@@ -65,7 +70,8 @@ const RegisterPage = () => {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    required />
+                    required
+                />
 
                 <label>Password: </label>
                 <input
@@ -73,15 +79,16 @@ const RegisterPage = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    required />
+                    required
+                />
 
-                    <button type="submit">Register</button>
-                    <p className="register-link">
-                        Already have an account? <a href="/login">Login</a>
-                    </p>
+                <button type="submit">Register</button>
+                <p className="register-link">
+                    Already have an account? <a href="/login">Login</a>
+                </p>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default RegisterPage;

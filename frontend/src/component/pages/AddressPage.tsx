@@ -3,16 +3,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import ApiService from "../../service/ApiService";
 import '../../style/address.css';
 
-interface Address {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;// este puede que sea id 
-    country: string;
-}
+const AddressPage = () => {
 
-const AddressPage: React.FC = () => {
-    const [address, setAddress] = useState<Address>({
+    const [address, setAddress] = useState({
         street: '',
         city: '',
         state: '',
@@ -49,7 +42,7 @@ const AddressPage: React.FC = () => {
         }));
     };
 
-    const handleSubmit = async (e: FormEvent) => { // se cambia handSubmit por HandletSubmit
+    const handSubmit = async (e) => {
         e.preventDefault();
         try {
             await ApiService.saveAddress(address);
@@ -63,7 +56,8 @@ const AddressPage: React.FC = () => {
         <div className="address-page">
             <h2>{location.pathname === '/edit-address' ? 'Edit Address' : "Add Address"}</h2>
             {error && <p className="error-message">{error}</p>}
-            <form onSubmit={handleSubmit}>
+
+            <form onSubmit={handSubmit}>
                 <label>
                     Street:
                     <input
